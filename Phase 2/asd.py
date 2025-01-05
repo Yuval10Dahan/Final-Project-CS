@@ -4,7 +4,7 @@ import textwrap
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 import os
-
+ 
 
 fake = Faker()
 # Path to a valid TTF font you have

@@ -3,7 +3,7 @@ import json
 import os
 
 # Load the template
-template_path = "creditCards/clean_card.png"  # Path to your clean template
+template_path = "creditCards/templates/clean_card.png"  # Path to your clean template
 output_folder = "creditCards/output_cards/mastercard/"  # Folder to save the generated images
 
 # Ensure the mastercard folder exists

@@ -3,14 +3,14 @@ import json
 import os
 
 # Load the template
-template_path = "creditCards/templates/clean_card.png"  # Path to your clean template
-output_folder = "creditCards/output_cards/mastercard/"  # Folder to save the generated images
+template_path = "creditCards/templates/black_card.png"  # Path to clean template
+output_folder = "creditCards/output_cards/visa_black/"  # Folder to save the generated images
 
 # Ensure the mastercard folder exists
 os.makedirs(output_folder, exist_ok=True)
 
 # Load the JSON data
-with open("cards.json", "r") as f:
+with open("json_files/cards.json", "r") as f:
     data = json.load(f)
 
 # Font setup
@@ -31,9 +31,9 @@ for record in data:
     expiry_date = record["Expiry_Date"]
 
     # Add the details to the template
-    draw.text((80, 200), formatted_number, fill="black", font=font)  # Card number with spaces
-    draw.text((65, 290), name.upper(), fill="black", font=font)  # Name in uppercase
-    draw.text((460, 290), expiry_date, fill="black", font=font)  # Expiry date
+    draw.text((20, 200), formatted_number, fill="white", font=font)  # Card number with spaces
+    draw.text((20, 35), name.upper(), fill="white", font=font)  # Name in uppercase
+    draw.text((50, 290), expiry_date, fill="white", font=font)  # Expiry date
 
     # Save the image
     output_path = os.path.join(output_folder, f"{name.replace(' ', '_')}_card.png")

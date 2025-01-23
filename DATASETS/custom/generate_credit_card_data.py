@@ -23,7 +23,7 @@ file_path = os.path.join(output_folder, "cards.json")
 # generate data
 data = []
 
-for _ in range(2):  # Adjust the range for more data
+for _ in range(1):  # Adjust the range for more data
     entry = {
         "Name": fake.name(),
         "Credit_Card_Number": credit_card.generate_card_number(prefix, length),
@@ -32,5 +32,5 @@ for _ in range(2):  # Adjust the range for more data
     data.append(entry)
 
 # Save to a JSON file
-with open("cards.json", "w") as json_file:
+with open("json_files/cards.json", "w") as json_file:
     json.dump(data, json_file, indent=4)

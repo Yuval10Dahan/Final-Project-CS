@@ -22,7 +22,7 @@ json_file_path = os.path.join(output_folder, "phone_bills.json")
 
 # Generate data
 data = []
-for _ in range(20000):  # Adjust the range for more bills
+for _ in range(2):  # Adjust the range for more bills
     name = fake.name()
     address = fake.address()
     phone_number = fake.basic_phone_number()

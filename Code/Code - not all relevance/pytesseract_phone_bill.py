@@ -1,0 +1,46 @@
+import os
+import json
+import pytesseract
+from PIL import Image
+
+# Path to the folder containing images
+image_folder = "phone_bill_images"
+output_file = "json_files/annotations_phone_bill.json"
+
+# Ensure Tesseract is installed and configure its path if necessary
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\yuval\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+
+
+# Function to extract text from an image
+def extract_text(image_path):
+    try:
+        image = Image.open(image_path)
+        text = pytesseract.image_to_string(image, lang="eng")
+        return text.strip()  # Remove unnecessary whitespace
+    except Exception as e:
+        print(f"Error processing {image_path}: {e}")
+        return ""
+
+
+# Process all images in the folder
+annotations = []
+
+# Sort filenames alphabetically
+file_list = sorted(
+    [f for f in os.listdir(image_folder) if f.lower().endswith((".png", ".jpg", ".jpeg"))]
+)
+
+image_number = 0
+
+for filename in file_list:
+    image_path = os.path.join(image_folder, filename)
+    print(f"Processing image number {image_number}...")
+    image_number += 1
+    text = extract_text(image_path)
+    annotations.append({"image_path": image_path, "text": text})
+
+# Save annotations to a JSON file
+with open(output_file, "w", encoding="utf-8") as f:
+    json.dump(annotations, f, indent=4, ensure_ascii=False)
+
+print(f"Annotation completed. Saved to {output_file}")

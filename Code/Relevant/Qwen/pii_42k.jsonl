@@ -1,0 +1,72 @@
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\credit_card\\credit_card_1.jpg", "is_sensitive": true, "types": ["CREDIT_CARD_NUMBER", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\credit_card\\credit_card_2.jpg", "is_sensitive": true, "types": ["CREDIT_CARD_NUMBER", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\credit_card\\credit_card_3.jpg", "is_sensitive": true, "types": ["CREDIT_CARD_NUMBER", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\credit_card\\credit_card_4.jpg", "is_sensitive": true, "types": ["CREDIT_CARD_NUMBER", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\credit_card\\credit_card_5.jpg", "is_sensitive": true, "types": ["CREDIT_CARD_NUMBER", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\credit_card\\credit_card_6.jpg", "is_sensitive": true, "types": ["CREDIT_CARD_NUMBER", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\driver_license\\license_1.png", "is_sensitive": true, "types": ["DRIVER_LICENSE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\driver_license\\license_2.png", "is_sensitive": true, "types": ["DRIVER_LICENSE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\driver_license\\license_3.png", "is_sensitive": true, "types": ["DRIVER_LICENSE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\driver_license\\license_4.png", "is_sensitive": true, "types": ["DRIVER_LICENSE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\driver_license\\license_5.png", "is_sensitive": true, "types": ["DRIVER_LICENSE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\driver_license\\license_6.png", "is_sensitive": true, "types": ["DRIVER_LICENSE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\medical_letter\\medical_letter_1.png", "is_sensitive": true, "types": ["MEDICAL_LETTER", "NAME", "PERSONAL_ID", "SSN", "PHONE"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\medical_letter\\medical_letter_2.png", "is_sensitive": true, "types": ["MEDICAL_LETTER", "NAME", "PERSONAL_ID", "SSN", "PHONE"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\medical_letter\\medical_letter_3.png", "is_sensitive": true, "types": ["MEDICAL_LETTER", "NAME", "PERSONAL_ID", "SSN", "PHONE"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\medical_letter\\medical_letter_4.png", "is_sensitive": true, "types": ["MEDICAL_LETTER", "NAME", "PERSONAL_ID", "SSN", "PHONE"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\medical_letter\\medical_letter_5.png", "is_sensitive": true, "types": ["MEDICAL_LETTER", "NAME", "PERSONAL_ID", "SSN", "PHONE"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\medical_letter\\medical_letter_6.png", "is_sensitive": true, "types": ["MEDICAL_LETTER", "NAME", "PERSONAL_ID", "SSN", "PHONE"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\mix_of_pii\\mix_of_Personal_Identifiable_Information_1.jpg", "is_sensitive": true, "types": ["OTHER_PII", "NAME", "PERSONAL_ID", "DRIVER_LICENSE", "ADDRESS"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\mix_of_pii\\mix_of_Personal_Identifiable_Information_2.jpg", "is_sensitive": true, "types": ["OTHER_PII", "NAME", "PERSONAL_ID", "DRIVER_LICENSE", "ADDRESS"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\mix_of_pii\\mix_of_Personal_Identifiable_Information_3.jpg", "is_sensitive": true, "types": ["OTHER_PII", "NAME", "PERSONAL_ID", "DRIVER_LICENSE", "ADDRESS"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\mix_of_pii\\mix_of_Personal_Identifiable_Information_4.png", "is_sensitive": true, "types": ["OTHER_PII", "NAME", "PERSONAL_ID", "DRIVER_LICENSE", "ADDRESS"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\mix_of_pii\\mix_of_Personal_Identifiable_Information_5.jpg", "is_sensitive": true, "types": ["OTHER_PII", "NAME", "PERSONAL_ID", "DRIVER_LICENSE", "ADDRESS"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\mix_of_pii\\mix_of_Personal_Identifiable_Information_6.jpg", "is_sensitive": true, "types": ["OTHER_PII", "NAME", "PERSONAL_ID", "DRIVER_LICENSE", "ADDRESS"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\phone_bill\\phone_bill_1.png", "is_sensitive": true, "types": ["PHONE_BILL", "NAME", "SSN", "ADDRESS", "PHONE", "BANK_ACCOUNT_NUMBER", "PERSONAL_ID"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\phone_bill\\phone_bill_2.png", "is_sensitive": true, "types": ["PHONE_BILL", "NAME", "SSN", "ADDRESS", "PHONE", "BANK_ACCOUNT_NUMBER", "PERSONAL_ID"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\phone_bill\\phone_bill_3.png", "is_sensitive": true, "types": ["PHONE_BILL", "NAME", "SSN", "ADDRESS", "PHONE", "BANK_ACCOUNT_NUMBER", "PERSONAL_ID"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\phone_bill\\phone_bill_4.png", "is_sensitive": true, "types": ["PHONE_BILL", "NAME", "SSN", "ADDRESS", "PHONE", "BANK_ACCOUNT_NUMBER", "PERSONAL_ID"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\phone_bill\\phone_bill_5.png", "is_sensitive": true, "types": ["PHONE_BILL", "NAME", "SSN", "ADDRESS", "PHONE", "BANK_ACCOUNT_NUMBER", "PERSONAL_ID"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\phone_bill\\phone_bill_6.png", "is_sensitive": true, "types": ["PHONE_BILL", "NAME", "SSN", "ADDRESS", "PHONE", "BANK_ACCOUNT_NUMBER", "PERSONAL_ID"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\pin_code\\pin_code_1.png", "is_sensitive": true, "types": ["PIN_CODE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\pin_code\\pin_code_2.png", "is_sensitive": true, "types": ["PIN_CODE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\pin_code\\pin_code_3.png", "is_sensitive": true, "types": ["PIN_CODE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\pin_code\\pin_code_4.png", "is_sensitive": true, "types": ["PIN_CODE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\pin_code\\pin_code_5.png", "is_sensitive": true, "types": ["PIN_CODE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\sensitive\\pin_code\\pin_code_6.png", "is_sensitive": true, "types": ["PIN_CODE", "NAME"]}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\advertisement_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\advertisement_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\advertisement_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\advertisement_4.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\budget_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\budget_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\budget_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\budget_4.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\email_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\email_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\email_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\email_4.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\form_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\form_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\form_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\form_4.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\handwritten_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\handwritten_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\handwritten_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\handwritten_4.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\letter_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\letter_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\letter_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\letter_4.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\memo_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\memo_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\memo_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\memo_4.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\resume_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\resume_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\resume_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\resume_4.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\scientific_report_1.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\scientific_report_2.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\scientific_report_3.tif", "is_sensitive": false, "types": []}
+{"image": "C:\\Users\\yuval\\Desktop\\datasets\\datasets\\pii\\non_sensitive\\scientific_report_4.tif", "is_sensitive": false, "types": []}

@@ -61,7 +61,7 @@ def generate_bill_image(bill_data, index):
 
     Customer Information:
     Name: {bill_data['Customer Information']['Name']}
-    ID: {bill_data['Customer Information']['ID']}
+    SSN: {bill_data['Customer Information']['SSN']}
     Address: {bill_data['Customer Information']['Address']}
     Phone: {bill_data['Customer Information']['Phone Number']}
 

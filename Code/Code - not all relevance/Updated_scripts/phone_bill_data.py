@@ -120,8 +120,10 @@ def generate_fake_phone_bill():
     name = fake.name()
     address = fake.address()
     phone_number = fake.basic_phone_number()
-    id_number = Id.generate_fake_id()
+    # id_number = Id.generate_fake_id()
     carrier = random.choice(carriers)
+
+    ssn_number = fake.ssn()
 
     # Invoice number generation
     invoice_number = random.choice(invoice_formats).format(num=random.randint(100000, 999999))
@@ -164,7 +166,7 @@ def generate_fake_phone_bill():
         },
         "Customer Information": {
             "Name": introduce_typos(name),
-            "ID": id_number,
+            "SSN": ssn_number,
             "Address": introduce_typos(address),
             "Phone Number": introduce_typos(phone_number)
         },
@@ -189,7 +191,7 @@ def generate_fake_phone_bill():
 
 
 # Generate multiple fake phone bills
-num_bills = 50000  # Change to desired number
+num_bills = 2000  # Change to desired number
 data = [generate_fake_phone_bill() for _ in range(num_bills)]
 
 # Save data to JSON file

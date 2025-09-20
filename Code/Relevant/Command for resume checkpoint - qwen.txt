@@ -1,0 +1,11 @@
+for resume checkpoint:
+
+# inside the notebook terminal
+pip uninstall -y torch torchvision torchaudio xformers 2>/dev/null || true
+
+# Install CUDA 12.4 wheels (bring their own CUDA)
+pip install --upgrade --index-url https://download.pytorch.org/whl/cu124 \
+  torch torchvision
+
+# (optional) xformers for attention speedups compatible with torch 2.6
+pip install --index-url https://download.pytorch.org/whl/cu124 xformers

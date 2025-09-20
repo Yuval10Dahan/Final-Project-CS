@@ -1,0 +1,88 @@
+###############
+python eval_base_qwen_eval2k.py --progress-every 25 --debug-first 3
+
+
+
+
+###########
+RUN run_lora_eval_only.py: (on qwen)
+
+python /notebooks/run_lora_eval_only.py \
+  --jsonl /notebooks/pii_eval_data_2k_2.jsonl \
+  --images-root /notebooks/Eval_data/Eval_data \
+  --adapter-path runs/qwen_pii_12k_lora/checkpoint-4000 \
+  --progress-every 25 \
+  --debug-first 0 \
+  --log runs/checkpoint-4000_new_eval/lora4000_on_pii_eval_data_2k.log
+
+
+###########
+RUN run_lora_eval_only.py: (on BLIP)
+
+python /notebooks/run_lora_eval_only.py \
+  --jsonl /notebooks/pii_eval_data_2k_2.jsonl \
+  --images-root /notebooks/Eval_data/Eval_data \
+  --adapter-path runs/qwen_pii_12k_lora/checkpoint-4000 \
+  --progress-every 25 \
+  --debug-first 0 \
+  --log runs/checkpoint-4000_new_eval/lora4000_on_pii_eval_data_2k.log
+
+
+############
+
+
+python train_blip_pii_full.py \
+  --jsonl /notebooks/pii_42k.jsonl \
+  --images-root /notebooks/datasets/datasets/pii \
+  --output-dir runs/blip_pii_lora_42k_80_10_10 \
+  --train-ratio 0.8 --val-ratio 0.1 --test-ratio 0.1 \
+  --epochs 3 --per-device-train-batch 4 --grad-accum 1 --fp16
+
+
+
+
+########################
+
+start a run:
+
+
+python run_lora_eval_only_blip.py \
+  --jsonl /notebooks/pii_eval_data_2k_2.jsonl \
+  --images-root /notebooks/Eval_data/Eval_data \
+  --ckpt-dir runs/blip_pii_12k_lora/checkpoint-4000 \
+  --preds runs/blip_pii_12k_lora/eval_preds.jsonl \
+  --log runs/blip_pii_12k_lora/eval_on_pii_eval_data_2k.log \
+  --batch-size 1 \
+  --max-new-tokens 256 \
+  --progress-every 25
+
+
+If the machine stops, resume exactly where you left off:
+
+python run_lora_eval_only_blip_with_resume.py \
+  --jsonl /notebooks/pii_eval_data_2k_2.jsonl \
+  --images-root /notebooks/Eval_data/Eval_data \
+  --ckpt-dir runs/blip_pii_12k_lora/checkpoint-4000 \
+  --preds runs/blip_pii_12k_lora/eval_preds.jsonl \
+  --log runs/blip_pii_12k_lora/eval_on_pii_eval_data_2k_resume.log \
+  --batch-size 1 --max-new-tokens 256 --progress-every 25 --resume
+
+
+
+################
+base blip2 eval:
+
+
+python run_eval_blip2_base.py \
+  --jsonl /notebooks/pii_eval_data_2k_2.jsonl \
+  --images-root /notebooks/Eval_data/Eval_data \
+  --preds runs/blip2_base/eval_preds_base_like_lora.jsonl \
+  --log runs/blip2_base/eval_on_pii_eval_data_2k_base_like_lora.log \
+  --batch-size 8 \
+  --max-new-tokens 256 \
+  --qa-max-new-tokens 4 \
+  --progress-every 50 \
+  --resume \
+  --cap-true 2 \
+  --never-labels EMAIL,OTHER_PII \
+  --debug-first 8

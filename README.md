@@ -12,7 +12,7 @@ This project explores multimodal (image+text) **sensitive-data/PII detection** w
 
 ## Key Contributions
 
-* **Dataset & JSONL schema** (image path, `is_sensitive`, `types[]`) with 12 PII labels; balanced splits and an unseen 2k eval set.&#x20;
+* **Dataset & JSONL schema** with PII labels; balanced splits and an unseen 2k eval set.&#x20;
 * **LoRA fine-tuning pipelines** for BLIP-2 and Qwen2.5-VL; base weights frozen, portable **checkpoint-4000** adapters.&#x20;
 * **Structured generation**: models return strict JSON `{labels: {...}, evidence_text: []}` for robust parsing.&#x20;
 * **Reproducible training/eval scripts** with resume-from-checkpoint, progress logging, and metrics.&#x20;

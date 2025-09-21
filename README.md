@@ -103,11 +103,9 @@ PROGRESS_EVERY=25 python train_qwen.py
 ### Qwen2.5-VL-7B-Instruct
 
 | Model          | Macro-F1 | Macro-F1(Excluding 0-support classes) | Any-PII F1 | Precision | Recall | Accuracy |
-| -------------- | -------- | ---------- | ---------- | --------- | ------ | -------- |
-| Base Qwen2.5   | 0.5481   | 0.7306     | 0.676      | 0.511     | 1.000  | 0.521    |
-| Qwen2.5 + LoRA | 0.6763   | 0.8266     | 0.774      | 0.631     | 1.000  | 0.707    |
-
-\*Excluding 0-support classes on this eval (e.g., EMAIL, MEDICAL\_LETTER). **Recall stays 1.0**, while **precision/accuracy improve substantially** → far fewer false alarms. &#x20;
+| -------------- | -------- | ------------------------------------- | ---------- | --------- | ------ | -------- |
+| Base Qwen2.5   | 0.5481   |                0.7306                 | 0.676      | 0.511     | 1.000  | 0.521    |
+| Qwen2.5 + LoRA | 0.6763   |                0.8266                 | 0.774      | 0.631     | 1.000  | 0.707    |
 
 ---
 

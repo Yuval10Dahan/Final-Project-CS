@@ -529,10 +529,10 @@ def main():
     # If we're only evaluating
     if EVAL_ONLY:
         if ADAPTER_PATH_ENV and os.path.isdir(ADAPTER_PATH_ENV):
-            model = PeftModel.from_pretrained(base_model, ADAPTER_PATH_ENV, is_trainable=False)
+            model = PeftModel.from_pretrained(base_model, ADAPTER_PATH_ENV, is_trainable=False)  # Attach adapter (frozen)
             print(f"[Eval-Only] Loaded adapters from {ADAPTER_PATH_ENV}")
         elif os.path.isdir(adapter_dir) and any(Path(adapter_dir).glob("adapter_*")):
-            model = PeftModel.from_pretrained(base_model, adapter_dir, is_trainable=False)
+            model = PeftModel.from_pretrained(base_model, adapter_dir, is_trainable=False)  # Attach adapter if present
             print(f"[Eval-Only] Loaded adapters from {adapter_dir}")
         else:
             model = base_model  # fall back (will evaluate base model)

@@ -33,14 +33,18 @@ This project explores multimodal (image+text) **sensitive-data/PII detection** w
 
 ```
 .
-├─ datasets/
-│  └─ pii/
-├─ runs/
-│  └─ blip_pii_12k_lora/
-│     ├─ checkpoint-XXXX/
-│     └─ logs/
-├─ train_blip2.py          # BLIP-2 + LoRA training/eval (JSON output)
-├─ eval_qwen_lora.py       # Qwen2.5-VL + LoRA evaluation (JSON output)
+├─ Code/
+│   └─ Relevant/
+│      ├─ BLIP/
+|      ├─ Qwen/
+|      ├─ Utils/
+│      └─ json_files/
+├─ DATASETS/
+│  ├─ Custom/
+   └─ From the internet/
+├─ Results/
+├─ Final Presentation.pptx
+├─ Final Report.pdf
 ├─ README.md
 └─ requirements.txt
 ```

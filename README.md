@@ -100,8 +100,6 @@ PROGRESS_EVERY=25 python train_qwen.py
 | Base BLIP-2   | 0.2227               | 0.787      | 0.780     | 0.794  | 0.785    |
 | BLIP-2 + LoRA | 0.1089               | 0.626      | 0.514     | 0.800  | 0.522    |
 
-*Base BLIP-2 is a stronger **general** detector (fewer false positives). LoRA helps **Credit Card Number** and sometimes **Name**, but increases false positives overall.*&#x20;
-
 ### Qwen2.5-VL-7B-Instruct
 
 | Model          | Macro-F1 | Macro-F1\* | Any-PII F1 | Precision | Recall | Accuracy |

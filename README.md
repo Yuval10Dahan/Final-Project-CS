@@ -120,15 +120,14 @@ PROGRESS_EVERY=25 python train_qwen.py
 ## Reproduce
 
 1. **Place data** under `datasets/pii/{sensitive,non_sensitive}` and the master `pii_42k.jsonl` in the repo root.
-2. **Train** BLIP-2 adapters: `python train_blip2.py`.
+2. **Train** BLIP-2 adapters: `python train_blip.py`.   Qwen2.5-VL adapters: `python train_qwen.py`
 3. **Evaluate** Qwen adapters (or BLIP-2): run the eval script with your adapter path and `--progress-every 25`.
-4. **Check logs** under `runs/.../logs/*.log` and metrics printed to console.
 
 ---
 
 ## Hardware notes
 
-* Trained on **A100-80G** (fastest). Works on **A5000/A6000** with smaller `PER_DEVICE_BATCH` and higher `ACCUM`.
+* Trained on **A100-80G** (expensive, suitable but still limited). 
 * Uses **bf16**, **gradient checkpointing**, and TF32 where available to reduce memory.&#x20;
 
 ---
@@ -137,22 +136,16 @@ PROGRESS_EVERY=25 python train_qwen.py
 
 * Some classes had **low/zero support** in the 2k eval, depressing macro-F1.
 * Document-centric data may limit generalization to natural scenes or multilingual content.
-* Future: expand class coverage, add real-world photos, tune prompts to cut false positives, and scale training on larger hardware.&#x20;
+* Future: expand class coverage, add real-world photos, and scale training on larger hardware.&#x20;
 
 ---
 
-## Citation
+## Documentation
 
 If you use this code, dataset schema, or results, please cite the **Final Report** and **Presentation**:
 
-* Final Report: *Sensitive Data Leakage Detection Based on Vision-Language Models*.&#x20;
-* Final Presentation: *Sensitive Data Leakage Detection Based on Vision-Language Models*.&#x20;
-
----
-
-## License
-
-Add your preferred license (MIT/Apache-2.0/BSD-3-Clause). If using external datasets, respect their licenses/terms.
+* Final Report
+* Final Presentation
 
 ---
 

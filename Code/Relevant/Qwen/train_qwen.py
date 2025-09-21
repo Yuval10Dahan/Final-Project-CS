@@ -1,14 +1,7 @@
-# t.py
-# Fine-tune Qwen2.5-VL-7B-Instruct (LoRA) for image-level PII classification (no boxes)
-# Supports EVAL_ONLY=1 to skip training and just run evaluation with a trained LoRA.
-# Adds:
-#   - JSONL_DIRECT=1 + JSONL_OVERRIDE=/path/file.jsonl   -> direct-eval exactly those records (no balancing)
-#   - ADAPTER_PATH=/path/to/checkpoint-XXXX              -> evaluate that specific adapter
-#   - PROGRESS_EVERY=N                                   -> progress line every N images
-#   - DEBUG_EVAL=1 + DEBUG_EVAL_MAX=N (0=unlimited)      -> per-sample lines with PRED_POS/GT_POS
+# Fine-tune Qwen2.5-VL-7B-Instruct (LoRA) for image-level PII classification
 
 import os
-os.environ["TRANSFORMERS_NO_TF"] = "1"
+os.environ["TRANSFORMERS_NO_TF"] = "1"  # Tell HuggingFace to ignore TensorFlow so only PyTorch is used
 
 import json, random, math, inspect, urllib.request, zipfile, re
 from dataclasses import dataclass
@@ -22,49 +15,49 @@ from packaging import version
 
 from transformers import TrainingArguments, Trainer
 try:
-    from transformers import Qwen2VLProcessor as ProcessorCls
+    from transformers import Qwen2VLProcessor as ProcessorCls  # Prefer the dedicated Qwen2-VL processor if available
 except Exception:
-    from transformers import AutoProcessor as ProcessorCls
+    from transformers import AutoProcessor as ProcessorCls  # Fallback to AutoProcessor if the specific one isn't present
 
 try:
-    from transformers import AutoModelForImageTextToText as AutoModelCls
+    from transformers import AutoModelForImageTextToText as AutoModelCls  # Prefer the new VLM generation class
 except Exception:
-    from transformers import AutoModelForVision2Seq as AutoModelCls  # fallback
+    from transformers import AutoModelForVision2Seq as AutoModelCls  # fallback to older API
 
 from peft import LoraConfig, get_peft_model, PeftModel
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score
 
 import torch.multiprocessing as mp
 try:
-    mp.set_start_method("spawn", force=True)
+    mp.set_start_method("spawn", force=True)  # Ensure multiprocessing uses spawn (safer on many systems)
 except RuntimeError:
     pass
 try:
-    torch.multiprocessing.set_sharing_strategy("file_system")
+    torch.multiprocessing.set_sharing_strategy("file_system")  # Avoid "too many open files" by using file system sharing
 except RuntimeError:
     pass
 
 # =========================
 # CONFIG — EDIT THESE
 # =========================
-USE_DROPBOX      = True
-DROPBOX_ZIP_URL  = "https://www.dropbox.com/scl/fi/48brdm5zhu5mvqxwt512d/datasets.zip?rlkey=vv99353pto1xk9u0ssyaykgbj&dl=1"
+USE_DROPBOX      = True  # Whether to auto-download the dataset zip from Dropbox
+DROPBOX_ZIP_URL  = "https://www.dropbox.com/scl/fi/48brdm5zhu5mvqxwt512d/datasets.zip?rlkey=vv99353pto1xk9u0ssyaykgbj&dl=1"   # Public link to the dataset zip
 ZIP_LOCAL        = "datasets.zip"
 EXTRACT_DIR      = "datasets"                 # where the zip will be extracted
 
-# Prefer a JSONL next to this script, else we’ll search EXTRACT_DIR recursively.
-JSONL_FILENAME   = "pii_42k.jsonl"
 
-OUTDIR           = "runs/qwen_pii_12k_lora"
+JSONL_FILENAME   = "pii_42k.jsonl"  # JSONL filename describing the dataset entries
+
+OUTDIR           = "runs/qwen_pii_12k_lora"  # Where to save checkpoints, adapters, logs
 
 # Training config (will be auto-dialed down on CPU)
-EPOCHS = 8
+EPOCHS = 8  # How many passes over the training set
 PER_DEVICE_BATCH = 2
-ACCUM = 8                                   # global batch = PER_DEVICE_BATCH * ACCUM
+ACCUM = 8   # Gradient accumulation steps; effective batch = PER_DEVICE_BATCH * ACCUM
 LR_LORA = 2e-4
 LR_PROJ = 1e-4
-WARMUP_RATIO = 0.05
-WEIGHT_DECAY = 0.01
+WARMUP_RATIO = 0.05   # Fraction of steps to linearly warm up the LR
+WEIGHT_DECAY = 0.01  # L2 regularization to prevent overfitting
 LOGGING_STEPS = 25
 SAVE_STEPS = None                           # None = auto; or set int
 EVAL_STEPS = None                           # None = auto
@@ -92,19 +85,23 @@ PII_TYPES = [
 IMG_EXTS = {".jpg",".jpeg",".png",".bmp",".tif",".tiff",".webp"}
 
 def env_flag(name: str) -> bool:
+    """Check if an environment variable is set to a truthy value (not "", "0", "false", "no")."""
+
     v = os.environ.get(name, "")
     return str(v).strip().lower() not in ("", "0", "false", "no")
 
-EVAL_ONLY        = env_flag("EVAL_ONLY")       # if set, skip training and only evaluate
-DEBUG_EVAL       = env_flag("DEBUG_EVAL")      # print per-sample debug during eval
-JSONL_DIRECT     = env_flag("JSONL_DIRECT")    # direct-eval exactly what's in the JSONL
-JSONL_OVERRIDE   = os.environ.get("JSONL_OVERRIDE", "").strip()
-SPLIT_ENV        = os.environ.get("SPLIT", "test").strip().lower()
-PROGRESS_EVERY   = int(os.environ.get("PROGRESS_EVERY", "0"))  # 0 = off
-DEBUG_EVAL_MAX   = int(os.environ.get("DEBUG_EVAL_MAX", "0"))  # 0 = unlimited
-ADAPTER_PATH_ENV = os.environ.get("ADAPTER_PATH", "").strip()
+EVAL_ONLY        = env_flag("EVAL_ONLY")       # If True, skip training and only run evaluation
+DEBUG_EVAL       = env_flag("DEBUG_EVAL")      # If True, print per-sample debug lines during eval
+JSONL_DIRECT     = env_flag("JSONL_DIRECT")    # If True, evaluate exactly the provided JSONL records (no rebalance)
+JSONL_OVERRIDE   = os.environ.get("JSONL_OVERRIDE", "").strip()   # Optional path to a specific JSONL file
+SPLIT_ENV        = os.environ.get("SPLIT", "test").strip().lower()  # Which split to use if JSONL has a split field
+PROGRESS_EVERY   = int(os.environ.get("PROGRESS_EVERY", "0"))   # Print a progress line every N images (0 = off)
+DEBUG_EVAL_MAX   = int(os.environ.get("DEBUG_EVAL_MAX", "0"))   # Limit number of per-sample debug prints (0 = unlimited)
+ADAPTER_PATH_ENV = os.environ.get("ADAPTER_PATH", "").strip()   # Path to a specific LoRA adapter to load at eval
 
 def download_if_needed(url: str, out_zip: str):
+    """Download a ZIP file from the given URL unless it already exists locally."""
+
     if os.path.isfile(out_zip):
         print(f"[Dropbox] ZIP already exists: {out_zip}")
         return
@@ -113,6 +110,8 @@ def download_if_needed(url: str, out_zip: str):
     print(f"[Dropbox] Saved to: {out_zip}")
 
 def extract_zip(zip_path: str, extract_to: str) -> None:
+    """Extract all files from a ZIP archive into the given directory."""
+
     os.makedirs(extract_to, exist_ok=True)
     print(f"[Dropbox] Extracting {zip_path} -> {extract_to}")
     with zipfile.ZipFile(zip_path, 'r') as zf:
@@ -120,6 +119,13 @@ def extract_zip(zip_path: str, extract_to: str) -> None:
     print("[Dropbox] Extraction complete.")
 
 def resolve_jsonl_path(jsonl_filename: str, extract_dir: str) -> str:
+    """Locate the JSONL dataset file:
+       - Use JSONL_OVERRIDE if provided
+       - Else look in the script directory
+       - Else search inside the extract_dir
+       - Raise error if not found
+    """
+
     # If user provided override path, use it.
     if JSONL_OVERRIDE:
         override = Path(JSONL_OVERRIDE).resolve()
@@ -143,6 +149,10 @@ def resolve_jsonl_path(jsonl_filename: str, extract_dir: str) -> str:
     raise FileNotFoundError(f"Could not find {jsonl_filename} locally or inside {extract_dir}")
 
 def locate_dataset_root(extract_dir: str) -> str:
+    """Find the dataset root containing 'sensitive/' and 'non_sensitive/' subfolders.
+       If not found, fall back to extract_dir.
+    """
+
     for p in Path(extract_dir).rglob("pii"):
         if (p / "sensitive").is_dir() and (p / "non_sensitive").is_dir():
             print(f"[Root] Using dataset root: {p}")
@@ -155,6 +165,10 @@ def locate_dataset_root(extract_dir: str) -> str:
     return str(Path(extract_dir).resolve())
 
 def build_basename_index(root_with_images: str) -> Dict[str, str]:
+    """Create a mapping from image basenames (filename only) to full paths under dataset root.
+       Used to repair broken image paths.
+    """
+
     idx = {}
     for p in Path(root_with_images).rglob("*"):
         if p.is_file() and p.suffix.lower() in IMG_EXTS:
@@ -164,6 +178,12 @@ def build_basename_index(root_with_images: str) -> Dict[str, str]:
 
 def repair_image_path(original_path: str, dataset_root: str,
                       basename_index: Optional[Dict[str,str]] = None) -> Optional[str]:
+    """Try to fix broken image paths by:
+       - Checking absolute path
+       - Rebuilding relative path under sensitive/non_sensitive
+       - Looking up basename in prebuilt index
+    """
+
     if os.path.exists(original_path):
         return original_path
     p = original_path.replace("\\", "/").lower()
@@ -182,17 +202,27 @@ def repair_image_path(original_path: str, dataset_root: str,
     return None
 
 def set_seed(seed=SEED):
+    """Set random seeds for reproducibility (Python, Torch, CUDA)."""
+
     random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
 def read_jsonl(path):
+    """Generator to read a JSONL file line by line and yield parsed JSON records."""
+
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 yield json.loads(line)
 
 def normalize_labels(rec: Dict[str, Any]):
+    """Normalize a dataset record:
+       - Ensure 'is_sensitive' is bool
+       - Ensure 'types' is filtered against known PII_TYPES
+       - Return (is_sensitive flag, dict of class->bool)
+    """
+
     is_sensitive = bool(rec.get("is_sensitive", False))
     types = rec.get("types", []) or []
     types = [t for t in types if t in PII_TYPES]
@@ -202,6 +232,8 @@ def normalize_labels(rec: Dict[str, Any]):
     return is_sensitive, labels
 
 def cap_long_side(im: Image.Image, long_side_max=LONG_SIDE_MAX):
+    """Resize image so its longest side ≤ long_side_max, preserving aspect ratio."""
+
     w, h = im.size
     m = max(w, h)
     if m <= long_side_max: return im
@@ -209,6 +241,10 @@ def cap_long_side(im: Image.Image, long_side_max=LONG_SIDE_MAX):
     return im.resize((int(round(w*scale)), int(round(h*scale))), Image.BICUBIC)
 
 def build_prompt(class_list: List[str], width: int, height: int) -> str:
+    """Construct the textual prompt for the model,
+       listing the PII classes and required JSON output format.
+    """
+
     return (
         "You are a PII auditor. Read the image and decide which PII types are present. "
         "Consider these classes ONLY:\n"
@@ -222,12 +258,18 @@ def build_prompt(class_list: List[str], width: int, height: int) -> str:
     )
 
 def build_answer_json(is_sensitive: bool, labels_dict: Dict[str, bool]) -> str:
+    """Create the ground-truth JSON answer string for training (labels + evidence_text)."""
+
     return json.dumps({"labels": labels_dict, "evidence_text": []}, ensure_ascii=False)
 
 class PIIDataset(Dataset):
+    """PyTorch Dataset wrapper for PII records: loads image, builds prompt and answer."""
+
     def __init__(self, records: List[Dict[str, Any]]):
         self.recs = records
+
     def __len__(self): return len(self.recs)
+
     def __getitem__(self, idx):
         r = self.recs[idx]
         path = r["image"]
@@ -243,8 +285,14 @@ class PIIDataset(Dataset):
 
 @dataclass
 class Collator:
+    """Custom data collator:
+       - Converts batch of (image, prompt, answer) into tokenized tensors
+       - Masks out prompt tokens in labels for loss computation
+    """
+
     processor: ProcessorCls
     pad_token_id: int
+
     def __call__(self, batch: List[Dict[str, Any]]) -> Dict[str, Any]:
         images  = [b["image"] for b in batch]
         prompts = [b["prompt"] for b in batch]
@@ -282,7 +330,10 @@ class Collator:
         return out
 
 def _load_all_records(jsonl_path: str, dataset_root: str) -> List[Dict[str, Any]]:
-    """Read JSONL, repair image paths, return all valid records (no shuffling)."""
+    """Read all records from JSONL, repairing image paths where possible.
+       Skip records with unresolved images.
+    """
+
     basename_index = None
     recs = []
     missing = 0
@@ -302,6 +353,11 @@ def _load_all_records(jsonl_path: str, dataset_root: str) -> List[Dict[str, Any]
     return recs
 
 def make_splits(jsonl_path: str, dataset_root: str):
+    """Split dataset into train/val/test:
+       - In EVAL_ONLY+JSONL_DIRECT mode: load exactly from JSONL, filter by split if available
+       - Otherwise: balance sensitive/non-sensitive records into train/val/test sizes
+    """
+
     # --- DIRECT EVAL SHORT-CIRCUIT ---
     if EVAL_ONLY and JSONL_DIRECT:
         recs = _load_all_records(jsonl_path, dataset_root)
@@ -346,6 +402,10 @@ def make_splits(jsonl_path: str, dataset_root: str):
     return train, val, test
 
 def parse_json_pred(s: str) -> Dict[str, bool]:
+    """Parse model output string, extract first JSON object, return labels dict.
+       If parsing fails, return all False.
+    """
+
     # Strip code fences if present
     s = s.strip()
     if s.startswith("```"):
@@ -363,6 +423,12 @@ def parse_json_pred(s: str) -> Dict[str, bool]:
     return {k: False for k in PII_TYPES}
 
 def metrics_from_preds(y_true: List[Dict[str,bool]], y_pred: List[Dict[str,bool]]):
+    """Compute metrics:
+       - Per-class F1/precision/recall/support
+       - Macro-F1 across classes
+       - Binary metrics (any-PII detection)
+    """
+
     per = {}
     for cls in PII_TYPES:
         t = [int(x.get(cls, False)) for x in y_true]
@@ -386,6 +452,8 @@ def metrics_from_preds(y_true: List[Dict[str,bool]], y_pred: List[Dict[str,bool]
     return {"per_class": per, "macro_f1": macro_f1, "binary": bin_metrics}
 
 def _latest_ckpt_dir(outdir: str) -> Optional[str]:
+    """Return the most recent checkpoint directory under outdir, if any."""
+
     p = Path(outdir)
     if not p.exists(): return None
     cks = [d for d in p.glob("checkpoint-*") if d.is_dir()]
@@ -393,6 +461,8 @@ def _latest_ckpt_dir(outdir: str) -> Optional[str]:
     return str(max(cks, key=lambda d: d.stat().st_mtime))
 
 def _strip_state_files_for_torch_lt_26(ckpt_dir: str):
+    """Remove optimizer/scheduler RNG state files from checkpoint for Torch < 2.6 (incompatible)."""
+
     for fname in ("optimizer.pt", "scheduler.pt", "rng_state.pth", "scaler.pt"):
         f = os.path.join(ckpt_dir, fname)
         if os.path.exists(f):

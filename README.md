@@ -62,7 +62,7 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-On "Paperspace" servers:
+On "Paperspace" machines:
 > GPU: A100-80G recommended for the training process.
 > free-A6000 can work on evaluation process. 
 
@@ -73,20 +73,13 @@ On "Paperspace" servers:
 The **BLIP-2** script fine-tunes LoRA adapters and evaluates on the held-out split. It also **tees** console logs to `runs/.../logs/*.log` and supports **resume**.
 
 ```bash
-python train_blip2.py \
-  --log runs/blip_pii_12k_lora/logs/blip2_$(date +%Y%m%d_%H%M%S).log
+python train_blip.py \
+  --jsonl /notebooks/pii_42k.jsonl \
+  --images-root /notebooks/datasets/datasets/pii \
+  --output-dir runs/blip_pii_lora_42k_80_10_10 \
+  --train-ratio 0.8 --val-ratio 0.1 --test-ratio 0.1 \
+  --epochs 3 --per-device-train-batch 4 --grad-accum 1 --fp16
 ```
-
-**Environment knobs** (all optional):
-
-* `EVAL_ONLY=0|1` (default 0)
-* `ADAPTER_PATH=/path/to/runs/blip_pii_12k_lora/checkpoint-XXXX` (force using a specific checkpoint)
-* `PROGRESS_EVERY=25` (progress prints during eval)
-* `MAX_NEW_TOKENS=256`
-
-**Resume after interruption**
-
-Just re-run the same command; the script auto-detects the latest `checkpoint-XXXX` in `runs/blip_pii_12k_lora/` and resumes training (or evaluates if `EVAL_ONLY=1`).&#x20;
 
 ---
 

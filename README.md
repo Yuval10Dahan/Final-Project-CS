@@ -12,19 +12,18 @@ This project explores multimodal (image+text) **sensitive-data/PII detection** w
 
 ## Key Contributions
 
-* **Dataset & JSONL schema** with PII labels; balanced splits and an unseen 2k eval set.&#x20;
-* **LoRA fine-tuning pipelines** for BLIP-2 and Qwen2.5-VL; base weights frozen, portable **checkpoint-4000** adapters.&#x20;
-* **Structured generation**: models return strict JSON `{labels: {...}, evidence_text: []}` for robust parsing.&#x20;
+* **Dataset & JSONL schema** with PII labels, balanced splits and an unseen 2k eval set.&#x20;
+* **LoRA fine-tuning pipelines** for BLIP-2 and Qwen2.5-VL, base weights frozen, portable **checkpoint-4000** adapters.&#x20;
+* **Structured generation**: models return strict JSON for robust parsing.&#x20;
 * **Reproducible training/eval scripts** with resume-from-checkpoint, progress logging, and metrics.&#x20;
 
 ---
 
 ## Dataset
 
-* **Total**: \~42k images (≈50/50 sensitive vs. non-sensitive). Used **12k** for training due to hardware limits; held-out **2k** eval set.
+* **Total**: 42k images (≈50/50 sensitive vs. non-sensitive). Used **12k** for training due to hardware limits, held-out **2k** evaluation set.
 * **Sensitive**: credit cards, IDs, bank letters/PIN, medical letters, phone bills, etc.
 * **Non-sensitive**: ads, reports, emails, forms, memos, resumes, handwritten notes.
-* **Storage**: `datasets/pii/{sensitive,non_sensitive}/...` + `pii_42k.jsonl` with normalized labels.&#x20;
 
 **PII classes**: `CREDIT_CARD_NUMBER, SSN, DRIVER_LICENSE, PERSONAL_ID, PIN_CODE, MEDICAL_LETTER, PHONE_BILL, NAME, ADDRESS, EMAIL, PHONE, OTHER_PII, BANK_ACCOUNT_NUMBER`.&#x20;
 

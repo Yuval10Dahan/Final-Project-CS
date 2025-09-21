@@ -473,13 +473,13 @@ def main():
         download_if_needed(DROPBOX_ZIP_URL, ZIP_LOCAL)
         extract_zip(ZIP_LOCAL, EXTRACT_DIR)
 
-    jsonl_path = resolve_jsonl_path(JSONL_FILENAME, EXTRACT_DIR)
-    dataset_root = locate_dataset_root(EXTRACT_DIR)
+    jsonl_path = resolve_jsonl_path(JSONL_FILENAME, EXTRACT_DIR)  # Find the JSONL file to use
+    dataset_root = locate_dataset_root(EXTRACT_DIR)  # Find the folder holding sensitive/non_sensitive subdirs
 
     os.makedirs(OUTDIR, exist_ok=True)
 
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
+    torch.backends.cuda.matmul.allow_tf32 = True   # Let matmul use TF32 for speed on Ampere+ (minor precision tradeoff)
+    torch.backends.cudnn.allow_tf32 = True   # Same for cuDNN convolutions
     set_seed(SEED)
 
     print("Loading & sampling dataset...")
@@ -487,47 +487,47 @@ def main():
     print(f"Train: {len(train_recs)} | Val: {len(val_recs)} | Test: {len(test_recs)}", flush=True)
 
     # --------- Device & run mode ----------
-    has_cuda = torch.cuda.is_available()
+    has_cuda = torch.cuda.is_available()   # Detect if a CUDA GPU is present
     if has_cuda:
         device = "cuda"
         dtype = torch.bfloat16
         run_mode = "FULL"
-        do_eval = not EVAL_ONLY  # during training mode, eval val each steps
+        do_eval = not EVAL_ONLY  
         max_steps_override = None
         per_device_train_batch = PER_DEVICE_BATCH
         grad_accum = ACCUM
-        optim_name = "adamw_torch_fused"
+        # optim_name = "adamw_torch_fused"
         num_workers = 0
         pin_mem = False
     else:
-        device = "cpu"
+        device = "cpu"  # Fallback to CPU
         dtype = torch.float32
         run_mode = "CPU_SMOKE_TEST"
         do_eval = False
         max_steps_override = 1
         per_device_train_batch = 1
         grad_accum = 1
-        optim_name = "adamw_torch"
+        # optim_name = "adamw_torch"
         num_workers = 0
         pin_mem = False
         if not EVAL_ONLY:
             print("\n[CPU] CUDA not available — running a quick CPU smoke test (1 train step, no eval).\n", flush=True)
 
     print("Loading model & processor...")
-    processor = ProcessorCls.from_pretrained(MODEL_ID, trust_remote_code=True)
-    PAD_ID = getattr(processor.tokenizer, "pad_token_id", None) or processor.tokenizer.eos_token_id
+    processor = ProcessorCls.from_pretrained(MODEL_ID, trust_remote_code=True)   # Load tokenizer/image processor
+    PAD_ID = getattr(processor.tokenizer, "pad_token_id", None) or processor.tokenizer.eos_token_id  # Determine padding token id
 
     # ===== Model & (maybe) adapters =====
-    base_model = AutoModelCls.from_pretrained(MODEL_ID, torch_dtype=dtype, trust_remote_code=True)
+    base_model = AutoModelCls.from_pretrained(MODEL_ID, torch_dtype=dtype, trust_remote_code=True)  # Load base VLM
     base_model.to(device)
     base_model.config.use_cache = False  # off during train; will re-enable for eval
 
     # Choose adapter directory
-    latest = _latest_ckpt_dir(OUTDIR)
+    latest = _latest_ckpt_dir(OUTDIR)   # Look for most recent checkpoint in OUTDIR
     adapter_dir = ADAPTER_PATH_ENV or (latest if latest else OUTDIR)
 
+    # If we're only evaluating
     if EVAL_ONLY:
-        # Do NOT wrap the model again; just attach the trained adapter for inference.
         if ADAPTER_PATH_ENV and os.path.isdir(ADAPTER_PATH_ENV):
             model = PeftModel.from_pretrained(base_model, ADAPTER_PATH_ENV, is_trainable=False)
             print(f"[Eval-Only] Loaded adapters from {ADAPTER_PATH_ENV}")

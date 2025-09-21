@@ -76,26 +76,17 @@ The **BLIP-2** script fine-tunes LoRA adapters and evaluates on the held-out spl
 python train_blip.py \
   --jsonl /notebooks/pii_42k.jsonl \
   --images-root /notebooks/datasets/datasets/pii \
-  --output-dir runs/blip_pii_lora_42k_80_10_10 \
-  --train-ratio 0.8 --val-ratio 0.1 --test-ratio 0.1 \
-  --epochs 3 --per-device-train-batch 4 --grad-accum 1 --fp16
+  --output-dir runs/blip_pii_lora 
 ```
 
 ---
 
-## Evaluation (Qwen2.5-VL + LoRA)
+## Training (Qwen2.5-VL + LoRA)
 
-Use the provided evaluator to attach LoRA adapters to **Qwen2.5-VL-7B-Instruct** and run on a JSONL list of images. It “tees” logs and prints periodic progress:
+The **Qwen2.5-VL** script fine-tunes LoRA adapters and evaluates on the held-out split. It also **tees** console logs to `runs/.../logs/*.log` and supports **resume**.
 
 ```bash
-python eval_qwen_lora.py \
-  --jsonl /path/to/eval.jsonl \
-  --images-root /path/to/images_root \
-  --adapter-path runs/qwen_pii_12k_lora/checkpoint-4000 \
-  --progress-every 25 \
-  --debug-first 0 \
-  --max-new-tokens 256 \
-  --log runs/qwen/logs/qwen_$(date +%Y%m%d_%H%M%S).log
+PROGRESS_EVERY=25 python train_qwen.py
 ```
 
 ---

@@ -29,7 +29,7 @@ This project explores multimodal (image+text) **sensitive-data/PII detection** w
 
 ---
 
-## Repo structure (suggested)
+## Repo structure 
 
 ```
 .

@@ -47,6 +47,7 @@ This project explores multimodal (image+text) **sensitive-data/PII detection** w
 ├─ Final Report.pdf
 ├─ README.md
 └─ requirements.txt
+└─ setup.sh
 ```
 
 ---
@@ -55,13 +56,15 @@ This project explores multimodal (image+text) **sensitive-data/PII detection** w
 
 ```bash
 # Python 3.10+ recommended
-pip install -r requirements.txt
-# or minimal:
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-pip install transformers>=4.44 peft>=0.13 accelerate datasets pillow scikit-learn packaging
+pip install --no-cache-dir -r requirements.txt
+
+chmod +x setup.sh
+./setup.sh
 ```
 
-> GPU: A100-80G recommended for fastest runs; A5000/A6000 can work with smaller per-device batch size/accumulation. (Training settings below.)
+On "Paperspace" servers:
+> GPU: A100-80G recommended for the training process.
+> free-A6000 can work on evaluation process. 
 
 ---
 
